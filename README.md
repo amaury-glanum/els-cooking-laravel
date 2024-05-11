@@ -64,3 +64,41 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Vhosts
+```
+<VirtualHost *:80>
+       DocumentRoot "/opt/lampp/htdocs/"
+       ServerName localhost
+</VirtualHost>
+<VirtualHost *:80>
+       DocumentRoot "/opt/lampp/apps/wordpress/htdocs"
+       ServerName wordpress.localhost
+</VirtualHost>
+
+define ROOT "/opt/lampp/htdocs/els-togo-projects"
+define SITE local.els-togo.com
+
+<VirtualHost *:80>
+    DocumentRoot "${ROOT}"
+    ServerName ${SITE}
+    ServerAlias *.${SITE}
+    <Directory "${ROOT}">
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+
+define ROOT "/opt/lampp/htdocs/els-cooking/public"
+define SITE local.els-cooking.com
+
+<VirtualHost *:80>
+    DocumentRoot "${ROOT}"
+    ServerName ${SITE}
+    ServerAlias *.${SITE}
+    <Directory "${ROOT}">
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+```
