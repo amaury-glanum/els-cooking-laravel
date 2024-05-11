@@ -34,4 +34,7 @@ Route::resource('cooking-team', TeamController::class)
     ->only(['index', 'store', 'update', 'destroy'])
     ->middleware(['auth', 'verified']);
 
+
+Route::resource('/member', TeamController::class);
+
 require __DIR__.'/auth.php';
