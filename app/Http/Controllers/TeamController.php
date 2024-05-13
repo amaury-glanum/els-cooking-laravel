@@ -64,18 +64,20 @@ class TeamController extends Controller
         //
     }
 
-    public function update(Request $request, Members $team): RedirectResponse
+    public function update(Request $request, int $id): RedirectResponse
     {
+        $team = Members::find($id);
+        Gate::authorize('update', $team);
         $validated = $request->validate([
             'user_id' => 'integer',
-            'prenom' => 'string|max:255',
-            'nom' => 'string|max:255',
-            'role' => 'string|max:255',
-            'presentation' => 'string|max:1000'
+            'nom' => 'string',
+            'prenom' => 'string',
+            'role' => 'string',
+            'presentation' => 'string'
+           
         ]);
-
         $team->update($validated);
-        return redirect(route('cooking-team.index'))->with('success', 'Vous avez bien modifié ce membre de l\' équipe ELS-TOGO.');
+        return redirect(route('cooking-team.index'));
     }
 
     /**

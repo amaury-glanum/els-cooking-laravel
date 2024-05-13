@@ -6,9 +6,10 @@ import TeamMember from '@/Components/TeamMember';
 import { useForm, Head } from '@inertiajs/react';
 import TextInput from '@/Components/TextInput';
 
-export default function Index({ auth, teams}) {
+export default function Index({ auth, members}) {
 
     const { data, setData, post, processing, reset, errors } = useForm({
+        user_id: auth.user.id,
         prenom: '',
         nom: '',
         presentation: '',
@@ -19,8 +20,6 @@ export default function Index({ auth, teams}) {
         e.preventDefault();
         post(route('cooking-team.store'), { onSuccess: () => reset() });
     };
-
-    console.log('teams members', teams)
 
     return (
         <AuthenticatedLayout user={auth.user}>
@@ -63,7 +62,7 @@ export default function Index({ auth, teams}) {
                 </form>
             </div>
             <div className="p-4 sm:p-6 lg:p-8 flex flex-wrap grow gap-2">
-            {teams.map(member =>
+            {members.map(member =>
                 <TeamMember key={member.id} member={member} />
                 )}
 
