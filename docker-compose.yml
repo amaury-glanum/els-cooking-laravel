@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+#  web:
+#    build: .
+#    restart: unless-stopped
+#    ports:
+#      - "8080:80"
+#    volumes:
+#      - ./:/var/www/html
+  db:
+    image: mariadb
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MARIADB_DATABASE: b0djintrilfiraqshcjd-mysql.services.clever-cloud.com:3306
+      MARIADB_USER: nass
+      MARIADB_PASSWORD: password
+      MARIADB_ROOT_PASSWORD: root
+    volumes:
+      - ./data/db:/var/lib/mysql
+#      - ./sql/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+  phpmyadmin:
+    image: phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8088:80"
+    environment:
+      PMA_ARBITRARY: 1
