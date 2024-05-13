@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Team;
+use Illuminate\Support\Facades\Gate;
+use App\Models\Members;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -16,7 +17,7 @@ class TeamController extends Controller
     public function index(): Response
 
     {
-        return Inertia::render('CookingTeam/Index', ['teams' => Team::all()]);
+        return Inertia::render('CookingTeam/Index', ['members' => Members::all()]);
     }
 
     /**
@@ -33,7 +34,7 @@ class TeamController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'avatar_url' => 'string|max:255',
+            'user_id' => 'integer|required',
             'prenom' => 'string|max:255',
             'nom' => 'string|max:255',
             'role' => 'string|max:255',
@@ -41,16 +42,16 @@ class TeamController extends Controller
         ]);
 
         // Create a new team entry using the validated data
-        $team = Team::create($validated);
+        $team = Members::create($validated);
 
         // Optionally, redirect to a page showing the newly created team
-        return redirect()->route('cooking-team.index')->with('success', 'Team created successfully!');
+        return redirect()->route('cooking-team.index')->with('success', 'Vous avez bien ajouté ce membre à l\' équipe ELS-TOGO.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(team $team)
+    public function show(Members $team)
     {
         //
     }
@@ -58,14 +59,15 @@ class TeamController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(team $team)
+    public function edit(Members $team)
     {
         //
     }
 
-    public function update(Request $request, Team $team): RedirectResponse
+    public function update(Request $request, Members $team): RedirectResponse
     {
         $validated = $request->validate([
+            'user_id' => 'integer',
             'prenom' => 'string|max:255',
             'nom' => 'string|max:255',
             'role' => 'string|max:255',
@@ -73,15 +75,17 @@ class TeamController extends Controller
         ]);
 
         $team->update($validated);
-        return redirect(route('cooking-team.index'));
+        return redirect(route('cooking-team.index'))->with('success', 'Vous avez bien modifié ce membre de l\' équipe ELS-TOGO.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Team $team): RedirectResponse
+    public function destroy(Members $team): RedirectResponse
     {
+        Gate::authorize('delete', $team);
         $team->delete();
         return redirect(route('cooking-team.index'));
+        // return redirect(route('cooking-team.index'))->with('success', 'Vous avez bien supprimé ce membre de l\' équipe ELS-TOGO.');
     }
 }

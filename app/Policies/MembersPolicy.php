@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Chirp;
+use App\Models\Members;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class ChirpPolicy
+class MembersPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,7 +19,7 @@ class ChirpPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Chirp $chirp)
+    public function view(User $user, Members $members)
     {
         //
     }
@@ -35,24 +35,24 @@ class ChirpPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Chirp $chirp): bool
+    public function update(User $user, Members $members): bool
     {
-        return $chirp->user()->is($user);
+        return $members->user()->is($user);
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Chirp $chirp): bool
+    public function delete(User $user, Members $members): bool
     {
-        dd($chirp->user()->is($user));
-        return $chirp->user()->is($user);
+        
+        return true;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Chirp $chirp)
+    public function restore(User $user, Members $members)
     {
         //
     }
@@ -60,7 +60,7 @@ class ChirpPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Chirp $chirp)
+    public function forceDelete(User $user, Members $members)
     {
         //
     }

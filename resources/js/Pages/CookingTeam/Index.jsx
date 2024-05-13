@@ -6,9 +6,12 @@ import TeamMember from '@/Components/TeamMember';
 import { useForm, Head } from '@inertiajs/react';
 import TextInput from '@/Components/TextInput';
 
-export default function Index({ auth, teams}) {
+
+
+export default function Index({ auth, members}) {
 
     const { data, setData, post, processing, reset, errors } = useForm({
+        user_id: auth.user.id,
         prenom: '',
         nom: '',
         presentation: '',
@@ -20,8 +23,8 @@ export default function Index({ auth, teams}) {
         post(route('cooking-team.store'), { onSuccess: () => reset() });
     };
 
-    console.log('teams members', teams)
-
+    console.log('teams members', members)
+    console.log('user id', auth.user.id)
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Equipe" />
@@ -40,6 +43,13 @@ export default function Index({ auth, teams}) {
                         className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                         onChange={e => setData('nom', e.target.value)}
                     ></TextInput>
+                    <input
+                        type="hidden"
+                        value={auth.user.id}
+                        className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+                        onChange={e => setData('user_id', e.target.value)}
+                    />
+
                     <textarea
                         value={data.presentation}
                         placeholder="Présentez le membre ici"
@@ -51,10 +61,11 @@ export default function Index({ auth, teams}) {
                         className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                         onChange={e => setData('role', e.target.value)}
                     >
-                        <option value="president">Président</option>
-                        <option value="secretaire">Secretaire</option>
-                        <option value="membre">Membre</option>
+                        <option value="Président">Président</option>
+                        <option value="Secrétaire">Secretaire</option>
+                        <option value="Coordinateur">Coordinateur</option>
                     </select>
+                    
                     <InputError message={errors.message} className="mt-2" />
                     {Object.keys(errors).map((errorField) => (
                         <InputError key={errorField} message={errors[errorField]} className="mt-2" />
@@ -63,9 +74,18 @@ export default function Index({ auth, teams}) {
                 </form>
             </div>
             <div className="p-4 sm:p-6 lg:p-8 flex flex-wrap grow gap-2">
-            {teams.map(member =>
+            {members.length > 0 ? 
+            
+            members.map(member =>
                 <TeamMember key={member.id} member={member} />
-                )}
+                ): 
+                <div className="min-w-[100%] flex flex-col items-center justify-center" >
+                    <div className="min-w-[80%] rounded p-5 bg-slate-600 flex flex-col items-center justify-center" >
+                        <p className="text-center text-lg fw-bold text-gray-200">Aucun membre n'est définit pour l'instant</p>
+                    </div>
+                </div>
+                
+                }
 
             </div>
         </section>
