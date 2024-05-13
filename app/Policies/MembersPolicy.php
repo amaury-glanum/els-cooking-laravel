@@ -46,7 +46,7 @@ class MembersPolicy
     public function delete(User $user, Members $members): bool
     {
         
-        return true;
+        return $members->user()->is($user);
     }
 
     /**

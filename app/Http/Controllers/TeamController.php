@@ -81,8 +81,9 @@ class TeamController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Members $team): RedirectResponse
+    public function destroy($id): RedirectResponse
     {
+        $team = Members::find($id);
         Gate::authorize('delete', $team);
         $team->delete();
         return redirect(route('cooking-team.index'));
