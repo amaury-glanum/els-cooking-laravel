@@ -67,14 +67,10 @@ class TeamController extends Controller
     public function update(Request $request, int $id): RedirectResponse
     {
         $team = Members::find($id);
+ 
         Gate::authorize('update', $team);
         $validated = $request->validate([
-            'user_id' => 'integer',
-            'nom' => 'string',
-            'prenom' => 'string',
-            'role' => 'string',
-            'presentation' => 'string'
-           
+            'nom' => 'string|max:255',      
         ]);
         $team->update($validated);
         return redirect(route('cooking-team.index'));

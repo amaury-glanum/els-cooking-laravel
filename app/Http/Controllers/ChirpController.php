@@ -66,6 +66,7 @@ class ChirpController extends Controller
      */
     public function update(Request $request, Chirp $chirp): RedirectResponse
     {
+        dd($request->all());
         Gate::authorize('update', $chirp);
         $validated = $request->validate([
             'message' => 'required|string|max:255',

@@ -69,7 +69,7 @@ export default function TeamMember({ member }) {
                 
                 {editing ? <form onSubmit={submit}>
 
-                        <input type="text" value={data.nom} placeholder={`${editing}`} onChange={e => setData(`${editing}`, e.target.value)} 
+                        <input type="text" placeholder={`${editing}`} onChange={e => setData(`${editing}`, e.target.value)} 
                         className={`mt-4 w-full text-gray-900 border-gray-300
                                 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm`} />
                    
@@ -87,9 +87,12 @@ export default function TeamMember({ member }) {
                     : <div className="w-full flex flex-col gap-2">
                          <span className="text-gray-600 flex justify-between gap-2">
                             <span className="cursor-pointer text-green-700">Nom: {nom}</span>
-                            <span className="cursor-pointer text-green-700" onClick={() => setEditing(nom)}>Editer</span>
+                            <span className="cursor-pointer text-green-700" onClick={() => setEditing('nom')}>Editer</span>
                         </span>
-                         <span className="text-gray-600">Prénom: {prenom}</span>
+                         <span className="text-gray-600 flex justify-between gap-2">
+                            <span className="cursor-pointer text-green-700">Prénom: {prenom}</span>
+                            <span className="cursor-pointer text-green-700" onClick={() => setEditing('prenom')}>Editer</span>
+                         </span>
                          <span className="text-gray-600">Fonction: {role}</span>
                          <span className="text-gray-600">Id: {id}</span>
                          <span className="text-gray-600">Responsable: {user_id}</span>
