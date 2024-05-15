@@ -1,12 +1,21 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Link } from '@inertiajs/react';
 
-export default function Authenticated({ user, header, children }) {
+export default function Authenticated({ user, header, flash, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+
+    useEffect(() => {
+        toast(flash?.message)
+        toast.error(flash?.error)
+        toast.warning(flash?.warning)
+        toast.success(flash?.success)
+    }, [flash])
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -29,6 +38,9 @@ export default function Authenticated({ user, header, children }) {
                                 </NavLink>
                                 <NavLink href={route('cooking-team.index')} active={route().current('cooking-team.index')}>
                                 Mon équipe
+                                </NavLink>
+                                <NavLink href={route('cooking-projects.index')} active={route().current('cooking-projects.index')}>
+                                    Projets
                                 </NavLink>
                             </div>
                         </div>
@@ -63,7 +75,7 @@ export default function Authenticated({ user, header, children }) {
                                     <Dropdown.Content>
                                         <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
                                         <Dropdown.Link href={route('logout')} method="post" as="button">
-                                            Log Out
+                                            Se déconnecter
                                         </Dropdown.Link>
                                     </Dropdown.Content>
                                 </Dropdown>
@@ -107,6 +119,9 @@ export default function Authenticated({ user, header, children }) {
                         <ResponsiveNavLink href={route('cooking-team.index')} active={route().current('cooking-team.index')}>
                                 Mon équipe
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('cooking-projects.index')} active={route().current('cooking-projects.index')}>
+                                Projets
+                        </ResponsiveNavLink>
                     </div>
 
                     <div className="pt-4 pb-1 border-t border-gray-200">
@@ -118,7 +133,7 @@ export default function Authenticated({ user, header, children }) {
                         <div className="mt-3 space-y-1">
                             <ResponsiveNavLink href={route('profile.edit')}>Profile</ResponsiveNavLink>
                             <ResponsiveNavLink method="post" href={route('logout')} as="button">
-                                Log Out
+                                Se déconnecter
                             </ResponsiveNavLink>
                         </div>
                     </div>
@@ -130,6 +145,19 @@ export default function Authenticated({ user, header, children }) {
                     <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">{header}</div>
                 </header>
             )}
+
+            <ToastContainer
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={true}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
 
             <main>{children}</main>
         </div>

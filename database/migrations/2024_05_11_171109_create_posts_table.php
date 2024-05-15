@@ -13,6 +13,18 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('post_title');
+            $table->string('post_extract');
+            $table->string('slug')->nullable();
+            $table->text('body')->nullable();
+            $table->json('list')->nullable();
+            $table->json('post_infos')->nullable();
+            $table->json('post_meta')->nullable();
+            $table->string('post_img_url')->nullable();
+            $table->string('post_img_name')->nullable();
+            $table->string('post_single_url')->nullable();
+            $table->string('posts_publish_status')->nullable();
             $table->timestamps();
         });
     }

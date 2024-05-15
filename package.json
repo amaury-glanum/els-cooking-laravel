@@ -3,7 +3,8 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vite build",
+        "postinstall": "node ./postinstall.js"
     },
     "devDependencies": {
         "@headlessui/react": "^1.4.2",
@@ -20,6 +21,10 @@
         "vite": "^5.0"
     },
     "dependencies": {
-        "dayjs": "^1.11.11"
+        "@tinymce/tinymce-react": "^5.0.1",
+        "dayjs": "^1.11.11",
+        "fs-extra": "^11.2.0",
+        "react-toastify": "^10.0.5",
+        "tinymce": "^7.1.0"
     }
 }
