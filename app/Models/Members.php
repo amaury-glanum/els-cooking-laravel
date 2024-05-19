@@ -15,6 +15,7 @@ class Members extends Model
         'prenom',
         'nom',
         'role',
+        'email',
         'presentation',
     ];
 

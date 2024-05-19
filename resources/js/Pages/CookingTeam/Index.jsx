@@ -12,6 +12,7 @@ export default function Index({ auth, members}) {
         user_id: auth.user.id,
         prenom: '',
         nom: '',
+        email: '',
         presentation: '',
         role: '',
     });
@@ -39,35 +40,37 @@ export default function Index({ auth, members}) {
                         className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                         onChange={e => setData('nom', e.target.value)}
                     ></TextInput>
+                    <TextInput
+                        value={data.email}
+                        placeholder="Email associatif du membre"
+                        className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+                        onChange={e => setData('email', e.target.value)}
+                    ></TextInput>
+                    <TextInput
+                        value={data.role}
+                        placeholder="Ecrivez ici la fonction officiel du membre"
+                        className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+                        onChange={e => setData('role', e.target.value)}
+                    ></TextInput>
                     <textarea
                         value={data.presentation}
-                        placeholder="Présentez le membre ici"
+                        placeholder="Ecrivez ici un court texte pour présenter le membre"
                         className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                         onChange={e => setData('presentation', e.target.value)}
                     ></textarea>
-                    <select
-                        placeholder="Role du membre"
-                        className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
-                        onChange={e => setData('role', e.target.value)}
-                    >
-                        <option value="president">Président</option>
-                        <option value="secretaire">Secretaire</option>
-                        <option value="membre">Membre</option>
-                    </select>
-                    <InputError message={errors.message} className="mt-2" />
+
+                    <InputError message={errors.message} className="mt-2"/>
                     {Object.keys(errors).map((errorField) => (
-                        <InputError key={errorField} message={errors[errorField]} className="mt-2" />
+                        <InputError key={errorField} message={errors[errorField]} className="mt-2"/>
                     ))}
                     <PrimaryButton className="mt-4 justify-center" disabled={processing}>Créer un membre</PrimaryButton>
                 </form>
             </div>
-            <div className="p-4 sm:p-6 lg:p-8 flex flex-wrap grow gap-2">
-            {members.map(member =>
-                <TeamMember key={member.id} member={member} />
-                )}
-
-            </div>
-        </section>
+                <div className="p-4 sm:p-6 lg:p-8 flex flex-wrap grow gap-2">
+                    {members.map(member =>
+                        <TeamMember key={member.id} member={member}/>)}
+                </div>
+            </section>
         </AuthenticatedLayout>
     );
 }

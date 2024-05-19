@@ -36,7 +36,8 @@ class MembersController extends Controller
         $validated = $request->validate([
             'user_id' => 'integer|required',
             'prenom' => 'string|max:255',
-            'nom' => 'string|max:255',
+            'nom' => 'string|max:255|required',
+            'email' => 'string|email|max:255|unique:members',
             'role' => 'string|max:255',
             'presentation' => 'string|max:1000',
         ]);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import dayjs from 'dayjs';
-import 'dayjs/locale/fr'; 
+import 'dayjs/locale/fr';
 import Dropdown from '@/Components/Dropdown';
 import { useForm, usePage } from '@inertiajs/react';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -61,18 +61,18 @@ export default function TeamMember({ member }) {
                     }
                 </div>
             </div>
-            
+
             <div className="flex-1">
                 <div className="flex justify-between items-center gap-5">
                     <div className="w-full flex flex-col gap-2">
-                            <small className="ml-2 text-sm text-gray-600"> Créé {dayjs(created_at).fromNow()}</small> 
-                
+                            <small className="ml-2 text-sm text-gray-600"> Créé {dayjs(created_at).fromNow()}</small>
+
                 {editing ? <form onSubmit={submit}>
 
-                        <input type="text" placeholder={`${editing}`} onChange={e => setData(`${editing}`, e.target.value)} 
+                        <input type="text" placeholder={`${editing}`} onChange={e => setData(`${editing}`, e.target.value)}
                         className={`mt-4 w-full text-gray-900 border-gray-300
                                 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm`} />
-                   
+
 
                         <div className="space-x-2">
 
@@ -94,12 +94,12 @@ export default function TeamMember({ member }) {
                             <span className="cursor-pointer text-green-700" onClick={() => setEditing('prenom')}>Editer</span>
                          </span>
                          <span className="text-gray-600">Fonction: {role}</span>
-                         <span className="text-gray-600">Id: {id}</span>
-                         <span className="text-gray-600">Responsable: {user_id}</span>
+                         <span className="text-gray-600">Identifiant du memnbre: {id}</span>
+                         <span className="text-gray-600">Gestionnaire: {user_id}</span>
                       </div>
-                }                        
-                       
-                    </div>            
+                }
+
+                    </div>
                 </div>
             </div>
 
