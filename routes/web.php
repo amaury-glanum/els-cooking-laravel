@@ -36,7 +36,15 @@ Route::resource('cooking-team', MembersController::class)
     ->middleware(['auth', 'verified']);
 
 Route::resource('cooking-projects', ProjectsController::class)
-    ->only(['index', 'store', 'update', 'destroy'])
+    ->only(['index', 'store', 'update', 'destroy', 'publish'])
+    ->middleware(['auth', 'verified']);
+
+Route::patch('cooking-projects/{project}/publish', [ProjectsController::class, 'publish'])
+    ->name('cooking-projects.publish')
+    ->middleware(['auth', 'verified']);
+
+Route::patch('cooking-projects/{project}/draft', [ProjectsController::class, 'draft'])
+    ->name('cooking-projects.draft')
     ->middleware(['auth', 'verified']);
 
 

@@ -17,7 +17,7 @@ class MembersController extends Controller
     public function index(): Response
 
     {
-        return Inertia::render('CookingTeam/Index', ['members' => Members::all()]);
+        return Inertia::render('CookingTeam/Index', ['members' => Members::all(), 'author' => Members::with('user:id,name')->get()]);
     }
 
     /**
@@ -72,6 +72,9 @@ class MembersController extends Controller
         Gate::authorize('update', $team);
         $validated = $request->validate([
             'nom' => 'string|max:255',
+            'prenom' => 'string|max:255',
+            'email' => 'string|max:255',
+            'role' => 'string|max:255',
         ]);
         $team->update($validated);
         return redirect(route('cooking-team.index'));

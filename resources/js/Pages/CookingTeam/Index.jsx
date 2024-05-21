@@ -6,7 +6,7 @@ import TeamMember from '@/Components/TeamMember';
 import { useForm, Head } from '@inertiajs/react';
 import TextInput from '@/Components/TextInput';
 
-export default function Index({ auth, members}) {
+export default function Index({ auth, members, author}) {
 
     const { data, setData, post, processing, reset, errors } = useForm({
         user_id: auth.user.id,
@@ -68,7 +68,7 @@ export default function Index({ auth, members}) {
             </div>
                 <div className="p-4 sm:p-6 lg:p-8 flex flex-wrap grow gap-2">
                     {members.map(member =>
-                        <TeamMember key={member.id} member={member}/>)}
+                        <TeamMember key={member.id} member={member} author={author}/>)}
                 </div>
             </section>
         </AuthenticatedLayout>
