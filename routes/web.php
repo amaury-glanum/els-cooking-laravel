@@ -3,9 +3,11 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChirpController;
 use App\Http\Controllers\MembersController;
+use App\Http\Controllers\MediasController;
 use App\Http\Controllers\ProjectsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UploadListDirectoryController;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -35,6 +37,10 @@ Route::resource('cooking-team', MembersController::class)
     ->only(['index', 'store', 'update', 'destroy'])
     ->middleware(['auth', 'verified']);
 
+Route::resource('cooking-medias', MediasController::class)
+    ->only(['index', 'store', 'update', 'destroy'])
+    ->middleware(['auth', 'verified']);
+
 Route::resource('cooking-projects', ProjectsController::class)
     ->only(['index', 'store', 'update', 'destroy', 'publish'])
     ->middleware(['auth', 'verified']);
@@ -46,6 +52,8 @@ Route::patch('cooking-projects/{project}/publish', [ProjectsController::class, '
 Route::patch('cooking-projects/{project}/draft', [ProjectsController::class, 'draft'])
     ->name('cooking-projects.draft')
     ->middleware(['auth', 'verified']);
+
+Route::get('/gdrive-list', UploadListDirectoryController::class)->name('gdrive.list');
 
 
 require __DIR__.'/auth.php';

@@ -13,11 +13,10 @@ return new class extends Migration
     {
         Schema::create('medias', function (Blueprint $table) {
             $table->id();
-            $table->ressource_id()->constrained()->cascadeOnDelete();
-            $table->string('name')->nullable();
-            $table->string('slug')->nullable();
-            $table->string('description')->nullable();
-            $table->string('extension')->nullable();
+            $table->string('media_name')->nullable();
+            $table->string('media_slug')->nullable();
+            $table->string('media_description')->nullable();
+            $table->string('media_extension')->nullable();
             $table->timestamps();
         });
     }

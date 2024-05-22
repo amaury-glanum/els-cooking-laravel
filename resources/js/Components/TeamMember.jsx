@@ -9,11 +9,11 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.locale('fr-FR');
 dayjs.extend(relativeTime);
 
-export default function TeamMember({ member, author }) {
+export default function TeamMember({ member, authors }) {
 
     const [editing, setEditing] = useState("");
     const { auth } = usePage().props;
-    const cardAuthor = author[0].user.name.charAt(0).toUpperCase() + author[0].user.name.slice(1)
+    const cardAuthor = authors[0].user.name.charAt(0).toUpperCase() + authors[0].user.name.slice(1)
 
     const { id, user_id, prenom, nom, email, presentation, role , created_at, updated_at} = member;
 

@@ -17,7 +17,7 @@ class MembersController extends Controller
     public function index(): Response
 
     {
-        return Inertia::render('CookingTeam/Index', ['members' => Members::all(), 'author' => Members::with('user:id,name')->get()]);
+        return Inertia::render('CookingTeam/Index', ['members' => Members::all(), 'authors' => Members::with('user:id,name')->get()]);
     }
 
     /**

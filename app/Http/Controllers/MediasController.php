@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Medias;
+use App\Models\Members;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class MediasController extends Controller
 {
@@ -12,7 +14,11 @@ class MediasController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Gallery/Index', [
+            'medias' => Medias::all(),
+            'members' => Members::all(),
+            'authors' => Members::with('user:id,name')->get()
+        ]);
     }
 
     /**

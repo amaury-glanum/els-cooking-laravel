@@ -6,14 +6,25 @@ import { useForm, usePage, Head, Link } from '@inertiajs/react';
 import TextInput from '@/Components/TextInput';
 import Wysiwyg from "@/Pages/CookingProjects/Partials/Wysiwyg.jsx";
 import StepperIndicators from "@/Components/StepperIndicators.jsx";
+import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import ProjectsList from "@/Pages/CookingProjects/Partials/ProjectsList.jsx";
 
 dayjs.locale('fr-FR');
 dayjs.extend(relativeTime);
 
-export default function Index({ auth, projects, author }) {
+export default function Index({ auth, projects, authors, flash }) {
+
+   console.log("flash", flash)
+
+    useEffect(() => {
+        toast(flash?.message)
+        toast.error(flash?.error)
+        toast.warning(flash?.warning)
+        toast.success(flash?.success)
+    }, [flash])
 
     const STEPS_TEXTS = [
         { id: 0, text: "Vignette" },
@@ -22,9 +33,6 @@ export default function Index({ auth, projects, author }) {
     ];
 
     const [currentStep, setCurrentStep] = useState(0);
-    const { project_publish_status, created_at, updated_at, user } = author[0]
-    console.log(user)
-    const createdFrom = dayjs(created_at).fromNow()
 
     const goToStep = (step) => setCurrentStep(step);
 
@@ -50,16 +58,33 @@ export default function Index({ auth, projects, author }) {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('cooking-projects.store'), { onSuccess: () => reset() });
+        try {
+            post(route('cooking-projects.store'), { onSuccess: () => reset() });
+        } catch(error) {
+            console.log(error)
+        }
+
     };
 
-    const [editing, setEditing] = useState("");
-    const projectCreator = user.name.charAt(0).toUpperCase() + user.name.slice(1)
+    const [editing, setEditing] = useState({on:false, object:{}});
+
+    console.log("now editing object", editing.object)
 
     const modify = (e) => {
         e.preventDefault();
+
+        // Filter out null values
+        const filteredData = Object.fromEntries(
+            Object.entries(data).filter(([key, value]) => value !== null && value !== '')
+        );
+
+        console.log('Filtered Data:', filteredData);
+
         try {
-            patch(route('cooking-projects.update', id), { onSuccess: () => setEditing(false) });
+            patch(route('cooking-projects.update', editing?.object?.id), {
+                data: filteredData,
+                onSuccess: () => setEditing({ on: false, object: {} })
+            });
         } catch (error) {
             console.log(error);
         }
@@ -68,10 +93,10 @@ export default function Index({ auth, projects, author }) {
 
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="Equipe" />
+            <Head title="Projets" />
             <section className="max-w-7xl mx-auto flex flex-wrap">
                 <div className="min-w-[550px] p-4 sm:p-6 lg:p-8">
-                    <form onSubmit={submit} className="h-[400px] max-w-lg flex flex-col gap-5">
+                    <form onSubmit={editing.on ? modify : submit} className="h-[400px] max-w-lg flex flex-col gap-5">
                         <StepperIndicators currentStep={currentStep} />
                         <section className="w-full my-2 flex gap-10">
                             {STEPS_TEXTS.map((step) => (
@@ -89,20 +114,20 @@ export default function Index({ auth, projects, author }) {
                             className={currentStep === 0 ? "flex flex-col gap-2 h-full w-full opacity-100 transition-all duration-75 delay-75" : "hidden"}>
                             <TextInput
                                 value={data.project_title}
-                                placeholder="Titre du projet"
+                                placeholder={editing.on ? editing.object.project_title : "Titre du nouveau projet"}
                                 className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                                 onChange={e => setData('project_title', e.target.value)}
                             />
                             <TextInput
                                 value={data.project_place}
-                                placeholder="Lieu du projet"
+                                placeholder={editing.on ? editing.object.project_place : "Lieu du projet"}
                                 className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                                 onChange={e => setData('project_place', e.target.value)}
                             />
+                            <label className={"mt-3 mb-1 text-xs text-gray-800 pl-1"}>{editing.on ? `Date du projet (Actuelle: ${editing.object.project_date}) : ` : "Date du projet : "}</label>
                             <TextInput
                                 type="date"
                                 value={data.project_date}
-                                placeholder="Donner un extrait pour les vignettes du projet ici"
                                 className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                                 onChange={e => setData('project_date', e.target.value)}
                             />
@@ -160,42 +185,25 @@ export default function Index({ auth, projects, author }) {
                             <InputError key={errorField} message={errors[errorField]} className="mt-2"/>
                         ))}
                         <PrimaryButton
-                            className={`mt-4 justify-center ${currentStep === 2 ? "opacity-100" : "opacity-50 pointer-events-none"}`}
+                            className={`mt-4 justify-center ${!editing.on && currentStep !== 2 ?  "opacity-50 pointer-events-none" : "opacity-100"}`}
                             disabled={processing}>
-                            Créer un projet
+                            {editing.on ? 'Modifier ce projet' : 'Créer un projet'}
                         </PrimaryButton>
+                        {!editing.on ? <span className={'text-xs text-gray-600'}>Cliquez sur la dernière étape pour valider le projet.</span> : null}
                     </form>
+                    {editing.on ?
+                    <div className={"w-full max-w-lg"}>
+                        <PrimaryButton
+                            className={"w-full mt-4 justify-center bg-gray-500"}
+                            onClick={() => setEditing({on: false, object: {}})}
+                        >
+                            Annuler
+                        </PrimaryButton>
+                    </div>
+                    : null}
                 </div>
                 <div className="p-4 sm:p-6 lg:p-8 flex flex-col flex-wrap grow gap-2">
-                    {projects.length > 0 ?
-                        <>
-                        <h2> Liste des projets: </h2>
-                        <ul className={`flex flex-col gap-4`}>
-                            {projects.map(project =>
-                                <li key={project.id} className="flex flex-col gap-1">
-                                    <div className="grow min-w-[350px] flex justify-between gap-2">
-                                        <span
-                                            className="grow">Projet n°&nbsp;{project.id}&nbsp;:&nbsp;{project.project_title}</span>&nbsp;
-                                        <span className={`text-teal-900 hover:text-red-600`}>
-                                        <Link as="button" href={route('cooking-projects.destroy', project.id)}
-                                              method="delete">Supprimer</Link>
-                                        </span>
-                                        <span className={"text-blue-500 hover:text-green-600"}>
-                                            {project_publish_status !== 'published' ?
-                                                (<Link as="button" href={route('cooking-projects.publish', project.id)}
-                                                      method="patch">Publier</Link>) :
-                                                (<Link as="button" href={route('cooking-projects.draft', project.id)}
-                                                       method="patch">Dépublier</Link>)
-                                            }
-                                        </span>
-                                    </div>
-                                    <span className="text-xs text-gray-500 ">Créé par {projectCreator}, {createdFrom} ({project_publish_status === 'published' ? 'Publié' : 'Brouillon'}). </span>
-                                </li>
-                            )}
-                        </ul>
-                        </> :
-                        <div>Aucun projet publié</div>
-                    }
+                    <ProjectsList auth={auth} projects={projects} authors={authors}  setEditing={setEditing} editing={editing}/>
                 </div>
             </section>
 
