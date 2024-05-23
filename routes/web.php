@@ -5,6 +5,7 @@ use App\Http\Controllers\ChirpController;
 use App\Http\Controllers\MembersController;
 use App\Http\Controllers\MediasController;
 use App\Http\Controllers\ProjectsController;
+use App\Http\Controllers\GoogleDriveTestController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UploadListDirectoryController;
@@ -54,6 +55,8 @@ Route::patch('cooking-projects/{project}/draft', [ProjectsController::class, 'dr
     ->middleware(['auth', 'verified']);
 
 Route::get('/gdrive-list', UploadListDirectoryController::class)->name('gdrive.list');
+
+Route::get('/test-google-drive', [GoogleDriveTestController::class, 'index']);
 
 
 require __DIR__.'/auth.php';

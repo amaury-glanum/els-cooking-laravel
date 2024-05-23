@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('media_slug')->nullable();
             $table->string('media_description')->nullable();
             $table->string('media_extension')->nullable();
+            $table->string('media_provider_id')->nullable();
+            $table->string('media_provider')->nullable();
             $table->timestamps();
         });
     }

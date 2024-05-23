@@ -12,13 +12,18 @@ class UploadListDirectoryController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $items = Gdrive::all('/');
+        $data = Gdrive::all('/');
+        dd($data);
+        return response($data, 200);
+
+//        return response($data->file, 200)
+//            ->header('Content-Type', $data->ext);
 
 //        return Inertia::render('Gallery/Partials/GdriveList', [
-//            'folders' => $items
+//            'folders' => $data,
 //        ]);
 
-        return response()->json($items);
+//        return response()->json($items);
     }
 
 //    public function __invoke(Request $request): Response

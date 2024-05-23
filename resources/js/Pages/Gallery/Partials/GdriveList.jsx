@@ -22,9 +22,9 @@ export default function GdriveList() {
         <div>
             <h1>Google Drive Folders</h1>
             <ul>
-                {/*{folders?.map(folder => (*/}
-                {/*    <li key={folder.id}>{folder.name}</li>*/}
-                {/*))}*/}
+                {folders?.map(folder => (
+                    <li key={folder.id}>{folder.name}</li>
+                ))}
             </ul>
         </div>
     );
