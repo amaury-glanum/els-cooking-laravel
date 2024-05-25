@@ -72,5 +72,7 @@ Route::post('/cooking-medias/media-to-project', [MediasController::class, 'media
 
 Route::get('file-upload', [FileController::class, 'index'])->name('file.upload');
 Route::post('file-upload', [FileController::class, 'store'])->name('file.upload.store');
+Route::delete('file/{id}', [FileController::class, 'destroy'])->name('file.destroy');
+
 
 require __DIR__.'/auth.php';

@@ -5,7 +5,7 @@ import { Head, useForm, usePage, Link } from '@inertiajs/react';
 export default function Index(props) {
 
     const { files } = usePage().props
-
+    console.log('files ', files);
     const { data, setData, errors, post, progress } = useForm({
         title: "",
         file: null,
@@ -17,6 +17,12 @@ export default function Index(props) {
         setData("title", "")
         setData("file", null)
     }
+
+    // const handleDelete = (id) => {
+    //     if (confirm("Êtes-vous sûr de vouloir supprimer ce fichier ?")) {
+    //         delete(route('file.destroy', id));
+    //     }
+    // };
 
     return (
         <AuthenticatedLayout user={props.auth.user}>
@@ -66,18 +72,25 @@ export default function Index(props) {
                                     <th className="px-4 py-2 w-20">No.</th>
                                     <th className="px-4 py-2">Title</th>
                                     <th className="px-4 py-2">Image</th>
+                                    <th className="px-4 py-2">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {files.map(({ id, title, name }) => (
+                                {files.map(({ id, title, name, url }) => (
                                     <tr>
                                         <td className="border px-4 py-2">{ id }</td>
                                         <td className="border px-4 py-2">{ title }</td>
                                         <td className="border px-4 py-2">
-                                            <img src={name} width="200px" />
+                                            <img src={url} alt={title} width="200px" />
+                                        </td>
+                                        <td>
+                                            <span className={`text-teal-900 hover:text-red-600`}>
+                                            <Link as="button" href={route('file.destroy', id)}
+                                                  method="delete">Supprimer</Link>
+                                            </span>
                                         </td>
                                     </tr>
-                                ))}
+                                    ))}
                                 {files.length === 0 && (
                                     <tr>
                                         <td className="px-6 py-4 border-t" colSpan="4">
