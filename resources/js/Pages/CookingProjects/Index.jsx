@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -17,13 +17,16 @@ dayjs.extend(relativeTime);
 
 export default function Index({ auth, projects, authors, flash }) {
 
-   console.log("flash", flash)
+    const toastId = useRef(null);
+    const [editing, setEditing] = useState({on:false, object:{}});
 
     useEffect(() => {
-        toast(flash?.message)
-        toast.error(flash?.error)
-        toast.warning(flash?.warning)
-        toast.success(flash?.success)
+        if(!toast.isActive(toastId.current)) {
+            toast(flash?.message)
+            toast.error(flash?.error)
+            toast.warning(flash?.warning)
+            toast.success(flash?.success)
+        }
     }, [flash])
 
     const STEPS_TEXTS = [
@@ -66,10 +69,6 @@ export default function Index({ auth, projects, authors, flash }) {
 
     };
 
-    const [editing, setEditing] = useState({on:false, object:{}});
-
-    console.log("now editing object", editing.object)
-
     const modify = (e) => {
         e.preventDefault();
 
@@ -95,7 +94,7 @@ export default function Index({ auth, projects, authors, flash }) {
         <AuthenticatedLayout user={auth.user}>
             <Head title="Projets" />
             <section className="max-w-7xl mx-auto flex flex-wrap">
-                <div className="min-w-[550px] p-4 sm:p-6 lg:p-8">
+                <div className="min-w-[300px] p-4 sm:p-6 lg:p-8">
                     <form onSubmit={editing.on ? modify : submit} className="h-[400px] max-w-lg flex flex-col gap-5">
                         <StepperIndicators currentStep={currentStep} />
                         <section className="w-full my-2 flex gap-10">

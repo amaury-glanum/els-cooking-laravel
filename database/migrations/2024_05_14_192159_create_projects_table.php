@@ -25,8 +25,6 @@ return new class extends Migration
             $table->text('project_method')->nullable();
             $table->text('project_results')->nullable();
             $table->string('project_single_url')->nullable();
-            $table->string('project_img_url')->nullable();
-            $table->string('project_img_name')->nullable();
             $table->json('project_infos')->nullable();
             $table->json('project_meta')->nullable();
             $table->string('project_publish_status')->nullable();

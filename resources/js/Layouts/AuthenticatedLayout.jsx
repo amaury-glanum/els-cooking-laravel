@@ -42,7 +42,10 @@ export default function Authenticated({ user, header, flash, children }) {
                                 Nos Projets
                                 </NavLink>
                                 <NavLink href={route('cooking-medias.index')} active={route().current('cooking-medias.index')}>
-                                    Gallerie
+                                    Galerie
+                                </NavLink>
+                                <NavLink href={route('file.upload')} active={route().current('file.upload')}>
+                                    Gestion des fichiers
                                 </NavLink>
                             </div>
                         </div>
@@ -122,7 +125,10 @@ export default function Authenticated({ user, header, flash, children }) {
                             Nos Projets
                         </ResponsiveNavLink>
                         <ResponsiveNavLink href={route('cooking-medias.index')} active={route().current('cooking-medias.index')}>
-                            Gallerie
+                            Galerie
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('file.upload')} active={route().current('file.upload')}>
+                            Gestion des fichiers
                         </ResponsiveNavLink>
                     </div>
 
@@ -161,7 +167,7 @@ export default function Authenticated({ user, header, flash, children }) {
                 theme="light"
             />
 
-            <main>{children}</main>
+            <main className={"relative mx-auto max-w-7xl max-sm:px-5"}>{children}</main>
         </div>
     );
 }

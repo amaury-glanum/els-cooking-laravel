@@ -13,12 +13,16 @@ return new class extends Migration
     {
         Schema::create('medias', function (Blueprint $table) {
             $table->id();
+            $table->string('media_category')->nullable();
+            $table->string('media_place')->nullable();
             $table->string('media_name')->nullable();
             $table->string('media_slug')->nullable();
             $table->string('media_description')->nullable();
             $table->string('media_extension')->nullable();
             $table->string('media_provider_id')->nullable();
             $table->string('media_provider')->nullable();
+            $table->string('media_provider_ext')->nullable();
+            $table->string('media_type')->nullable();
             $table->timestamps();
         });
     }

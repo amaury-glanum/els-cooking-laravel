@@ -33,6 +33,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
+                'username' => isset($request->user()->name) ? ucfirst($request->user()->name) : ""
             ],
             'flash' => [
                 'success' => $request->session()->get('success'),

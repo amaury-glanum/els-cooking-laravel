@@ -8,6 +8,7 @@ use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\GoogleDriveTestController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\UploadListDirectoryController;
 use Inertia\Inertia;
 
@@ -42,6 +43,14 @@ Route::resource('cooking-medias', MediasController::class)
     ->only(['index', 'store', 'update', 'destroy'])
     ->middleware(['auth', 'verified']);
 
+Route::get('cooking-medias/get-cloudinary', [MediasController::class, 'getCloudinary'])
+    ->name('cooking-medias.get-cloudinary')
+    ->middleware(['auth', 'verified']);
+
+Route::get('cooking-medias/down-cloudinary', [MediasController::class, 'DownCloudinary'])
+    ->name('cooking-medias.down-cloudinary')
+    ->middleware(['auth', 'verified']);
+
 Route::resource('cooking-projects', ProjectsController::class)
     ->only(['index', 'store', 'update', 'destroy', 'publish'])
     ->middleware(['auth', 'verified']);
@@ -58,5 +67,10 @@ Route::get('/gdrive-list', UploadListDirectoryController::class)->name('gdrive.l
 
 Route::get('/test-google-drive', [GoogleDriveTestController::class, 'index']);
 
+Route::post('/cooking-medias/media-to-project', [MediasController::class, 'mediaToProject'])
+    ->name('cooking-medias.media-to-project');
+
+Route::get('file-upload', [FileController::class, 'index'])->name('file.upload');
+Route::post('file-upload', [FileController::class, 'store'])->name('file.upload.store');
 
 require __DIR__.'/auth.php';
