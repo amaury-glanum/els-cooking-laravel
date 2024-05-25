@@ -10,6 +10,8 @@ import { Link } from '@inertiajs/react';
 export default function Authenticated({ user, header, flash, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
+    console.log('flash', flash)
+
     useEffect(() => {
         toast(flash?.message)
         toast.error(flash?.error)
@@ -31,16 +33,19 @@ export default function Authenticated({ user, header, flash, children }) {
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                                    Dashboard
-                                </NavLink>
-                                <NavLink href={route('chirps.index')} active={route().current('chirps.index')}>
-                                Chirps
+                                    Accueil
                                 </NavLink>
                                 <NavLink href={route('cooking-team.index')} active={route().current('cooking-team.index')}>
-                                Mon équipe
+                                 Notre équipe
                                 </NavLink>
                                 <NavLink href={route('cooking-projects.index')} active={route().current('cooking-projects.index')}>
-                                    Projets
+                                Nos Projets
+                                </NavLink>
+                                <NavLink href={route('cooking-medias.index')} active={route().current('cooking-medias.index')}>
+                                    Galerie
+                                </NavLink>
+                                <NavLink href={route('file.upload')} active={route().current('file.upload')}>
+                                    Gestion des fichiers
                                 </NavLink>
                             </div>
                         </div>
@@ -111,16 +116,19 @@ export default function Authenticated({ user, header, flash, children }) {
                 <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
                     <div className="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
-                            Dashboard
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink href={route('chirps.index')} active={route().current('chirps.index')}>
-                                Chirps
+                            Accueil
                         </ResponsiveNavLink>
                         <ResponsiveNavLink href={route('cooking-team.index')} active={route().current('cooking-team.index')}>
-                                Mon équipe
+                            Notre équipe
                         </ResponsiveNavLink>
                         <ResponsiveNavLink href={route('cooking-projects.index')} active={route().current('cooking-projects.index')}>
-                                Projets
+                            Nos Projets
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('cooking-medias.index')} active={route().current('cooking-medias.index')}>
+                            Galerie
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('file.upload')} active={route().current('file.upload')}>
+                            Gestion des fichiers
                         </ResponsiveNavLink>
                     </div>
 
@@ -147,7 +155,7 @@ export default function Authenticated({ user, header, flash, children }) {
             )}
 
             <ToastContainer
-                position="bottom-right"
+                position="top-right"
                 autoClose={5000}
                 hideProgressBar={false}
                 newestOnTop={true}
@@ -159,7 +167,7 @@ export default function Authenticated({ user, header, flash, children }) {
                 theme="light"
             />
 
-            <main>{children}</main>
+            <main className={"relative mx-auto max-w-7xl max-sm:px-5"}>{children}</main>
         </div>
     );
 }

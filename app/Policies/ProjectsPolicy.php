@@ -6,7 +6,7 @@ use App\Models\Projects;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class projectsPolicy
+class ProjectsPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -37,7 +37,7 @@ class projectsPolicy
      */
     public function update(User $user, Projects $projects): bool
     {
-        //
+        return $projects->user()->is($user);
     }
 
     /**
