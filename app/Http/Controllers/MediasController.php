@@ -10,26 +10,39 @@ use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
+use Illuminate\Support\Facades\Storage;
+
 use Cloudinary\Configuration\Configuration;
 use Cloudinary\Api\Admin\AdminApi;
 class MediasController extends Controller
 {
+    private array $cloudProviders = [
+        'cloudinary', 'local'
+    ];
+
+    private array $providersUrls = [
+        'cloudinary' => 'cloudinary-url', 'local' => '/file-upload'
+    ];
+
     /**
      * Display a listing of the resource.
      */
     public function index(): Response
     {
-        // if ressource not found
-        Configuration::instance(env('CLOUDINARY_URL'));
-        $publicId = 'elstogo/project-5_wvb3ne';
-        $admin = new AdminApi();
-        $resources = $admin->assets();
-
-        foreach ($resources['resources'] as $resource) {
-            $publicId = $resource['public_id'];
-        }
+//        if(Configuration::instance(env('CLOUDINARY_URL'))) {
+//            Configuration::instance(env('CLOUDINARY_URL'));
+//            $publicId = 'elstogo/project-5_wvb3ne';
+//            $admin = new AdminApi();
+//            $resources = $admin->assets();
+//
+//            foreach ($resources['resources'] as $resource) {
+//                $publicId = $resource['public_id'];
+//            }
+//        }
 
        return Inertia::render('Gallery/Index', [
+            'providers' => $this->cloudProviders,
+            'providersUrls' => $this->providersUrls,
             'medias' => Medias::all(),
             'members' => Members::all(),
             'projects' => Projects::all(),
@@ -37,17 +50,58 @@ class MediasController extends Controller
         ]);
     }
 
-    public function GetCloudinary(): RedirectResponse
+    private function extractFileName(string $filePath) {
+        $file = basename($filePath);
+        // Further process if needed, for example, removing the extension explicitly
+        $fileNameParts = explode('.', $file);
+        $fileNameBase = implode('.', array_slice($fileNameParts, 0, -1));
+
+        // Update the file path with the modified name
+        return $fileNameBase;
+    }
+
+
+    public function GetProvider(string $providerName): RedirectResponse
     {
         Configuration::instance(env('CLOUDINARY_URL'));
         $admin = new AdminApi();
-        $resources = $admin->assets();
+
+        switch ($providerName) {
+            case 'cloudinary':
+                $resources = $admin->assets()['resources'];
+                break;
+            case 'local':
+                $files = Storage::disk('local')->allFiles('');
+                $resources = [];
+
+                foreach ($files as &$file) {
+                    // Extract the file ID/name without extension
+                    $fileId = $this->extractFileName($file); // Assuming this method returns the desired file ID/name
+                    $fileRootPath = dirname($file);
+
+                    // Get the MIME type of the file
+                    $mim = Storage::mimeType($file);
+                    if($mim && $fileRootPath === 'public/uploads') {
+                        $resources[] = ["public_id" => $fileId, "format" => basename($mim), "slug" => $file, "path" => $fileRootPath];
+                    }
+                        // Directly push the associative array into $resources
+
+
+                }
+                break;
+            default:
+                $resources = ['resources' => []];
+        }
+
         $exist = 0;
         $new = 0;
 
-        foreach ($resources['resources'] as $resource) {
+        foreach ($resources as $resource) {
+            $slug = $providerName === 'local' ? $resource['slug'] : "";
+            $folderPath = $providerName === 'local' ? $resource['path'] : "";
+            $description = $providerName === 'local' ? $resource['path'] : "";
             $existingMedia = Medias::where('media_provider_id', $resource['public_id'])
-                ->where('media_provider', 'cloudinary')
+                ->where('media_provider', $providerName)
                 ->first();
 
             if ($existingMedia) {
@@ -57,6 +111,8 @@ class MediasController extends Controller
                     'media_provider_id' => $resource['public_id'],
                     'media_extension' => $resource['format'],
                     'media_provider_ext' => $resource['format'],
+                    'media_slug' => $slug,
+                    'media_description' => $description,
                     'media_type' => 'image',
 
                 ]);
@@ -65,9 +121,11 @@ class MediasController extends Controller
                 // Create a new record
                 Medias::create([
                     'media_name' => $resource['public_id'],
-                    'media_provider' => 'cloudinary',
+                    'media_provider' => $providerName,
                     'media_provider_id' => $resource['public_id'],
                     'media_provider_ext' => $resource['format'],
+                    'media_slug' => $slug,
+                    'media_description' => $description,
                     'media_type' => 'image',
                 ]);
                 $new += 1;
@@ -75,17 +133,19 @@ class MediasController extends Controller
         }
         $new = strval($new);
         $exist = strval($exist);
-        return redirect(route('cooking-medias.index'))->with('success', "Cloudinary activé: $new media ajouté et $exist médias mis à jour" );
+        $providerNameCap = ucfirst($providerName);
+
+        return redirect(route('cooking-medias.index'))->with('success', "$providerNameCap activé: $new media ajouté et $exist médias mis à jour" );
     }
 
-    public function downCloudinary(): RedirectResponse {
-        Medias::where('media_provider', 'cloudinary')->delete();
-
-        return redirect()->route('cooking-medias.index')->with('success', 'Cloudinary a été désactivé et ses medias supprimés sur els-cooking');
+    public function downProvider(string $providerName): RedirectResponse {
+        Medias::where('media_provider', $providerName)->delete();
+        $providerNameCap = ucfirst($providerName);
+        return redirect()->route('cooking-medias.index')->with('success', "$providerNameCap a été désactivé et ses medias supprimés sur els-cooking");
     }
 
     public function mediaToProject(Request $request, int $media_id, int $project_id): RedirectResponse {
-        dd($request);
+
         $project = Projects::find($project_id);
         $media = Medias::find($media_id);
 

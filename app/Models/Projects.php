@@ -24,8 +24,6 @@ class Projects extends Model
         'project_method',
         'project_results',
         'project_single_url',
-        'project_img_url',
-        'project_img_name',
         'project_infos',
         'project_meta',
         'project_publish_status',

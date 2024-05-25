@@ -43,12 +43,14 @@ Route::resource('cooking-medias', MediasController::class)
     ->only(['index', 'store', 'update', 'destroy'])
     ->middleware(['auth', 'verified']);
 
-Route::get('cooking-medias/get-cloudinary', [MediasController::class, 'getCloudinary'])
-    ->name('cooking-medias.get-cloudinary')
+// Cloud providers
+
+Route::get('cooking-medias/get-provider/{provider}', [MediasController::class, 'getProvider'])
+    ->name('cooking-medias.get-provider')
     ->middleware(['auth', 'verified']);
 
-Route::get('cooking-medias/down-cloudinary', [MediasController::class, 'DownCloudinary'])
-    ->name('cooking-medias.down-cloudinary')
+Route::get('cooking-medias/down-provider/{provider}', [MediasController::class, 'DownProvider'])
+    ->name('cooking-medias.down-provider')
     ->middleware(['auth', 'verified']);
 
 Route::resource('cooking-projects', ProjectsController::class)
@@ -72,5 +74,7 @@ Route::post('/cooking-medias/media-to-project', [MediasController::class, 'media
 
 Route::get('file-upload', [FileController::class, 'index'])->name('file.upload');
 Route::post('file-upload', [FileController::class, 'store'])->name('file.upload.store');
+Route::delete('file/{id}', [FileController::class, 'destroy'])->name('file.destroy');
+
 
 require __DIR__.'/auth.php';

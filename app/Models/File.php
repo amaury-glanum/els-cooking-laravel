@@ -19,6 +19,12 @@ class File extends Model
     ];
 
 
+    protected $appends = ['url'];
+
+    public function getUrlAttribute()
+    {
+        return asset('storage/' . $this->attributes['name']);
+    }
 
     /**
      * Get the user's first name.
