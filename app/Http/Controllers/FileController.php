@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\Projects;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Http\RedirectResponse;
@@ -71,6 +73,32 @@ class FileController extends Controller
         $file->delete();
 
         return redirect()->route('file.upload')->with('success', 'Le fichier a bien été supprimé.');
+    }
+
+    /**
+     * Download the specified file.
+     *
+     * @param  int  $id
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function download(int $id): StreamedResponse
+    {
+        $file = File::findOrFail($id);
+        $fileName = basename($file->name);
+
+        // Get the path to the file
+        $filePath = storage_path('app/public/uploads/' . $fileName);
+
+        // Check if the file exists
+        if (!Storage::disk('public')->exists('uploads/' . $fileName)) {
+            dump($fileName);
+            abort(404);
+        }
+
+        return Storage::download($filePath, $file->title . '.' . pathinfo($filePath, PATHINFO_EXTENSION));
+
+        // Download the file
+//        return response()->download($filePath, $file->title . '.' . pathinfo($filePath, PATHINFO_EXTENSION));
     }
 }
 

@@ -19,7 +19,12 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => [
+        'http://localhost:5173',
+        'https://els-cooking-laravel.ddev.site:5173',
+        'https://els-cooking-laravel.ddev.site:8443/',
+        'http://[::1]:5173'
+    ],
 
     'allowed_origins_patterns' => [],
 

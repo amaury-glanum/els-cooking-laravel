@@ -18,12 +18,6 @@ export default function Index(props) {
         setData("file", null)
     }
 
-    // const handleDelete = (id) => {
-    //     if (confirm("Êtes-vous sûr de vouloir supprimer ce fichier ?")) {
-    //         delete(route('file.destroy', id));
-    //     }
-    // };
-
     return (
         <AuthenticatedLayout user={props.auth.user}>
             <Head title="Posts" />
@@ -60,7 +54,7 @@ export default function Index(props) {
                                 )}
                                 <div className="mt-4">
                                     <button type="submit" className="px-6 py-2 font-bold text-white bg-green-500 rounded">
-                                        Save
+                                        Sauvegarder le media
                                     </button>
                                 </div>
                             </form>
@@ -69,8 +63,8 @@ export default function Index(props) {
                             <table className="table-fixed w-full">
                                 <thead>
                                 <tr className="bg-gray-100">
-                                    <th className="px-4 py-2 w-20">No.</th>
-                                    <th className="px-4 py-2">Title</th>
+                                    <th className="px-4 py-2 w-20">Id</th>
+                                    <th className="px-4 py-2">Titre</th>
                                     <th className="px-4 py-2">Image</th>
                                     <th className="px-4 py-2">Action</th>
                                 </tr>
@@ -84,17 +78,21 @@ export default function Index(props) {
                                             <img src={url} alt={title} width="200px" />
                                         </td>
                                         <td>
-                                            <span className={`text-teal-900 hover:text-red-600`}>
+                                            <div className={`text-teal-900 hover:text-red-600`}>
                                             <Link as="button" href={route('file.destroy', id)}
                                                   method="delete">Supprimer</Link>
-                                            </span>
+                                            </div>
+                                            <div className={`text-teal-900 hover:text-blue-600`}>
+                                            <Link as="button" href={route('file.download', id)}
+                                                  method="get">Télécharger</Link>
+                                            </div>
                                         </td>
                                     </tr>
-                                    ))}
+                                ))}
                                 {files.length === 0 && (
                                     <tr>
                                         <td className="px-6 py-4 border-t" colSpan="4">
-                                            No contacts found.
+                                        No contacts found.
                                         </td>
                                     </tr>
                                 )}
