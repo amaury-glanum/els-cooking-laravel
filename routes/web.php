@@ -72,6 +72,11 @@ Route::get('/test-google-drive', [GoogleDriveTestController::class, 'index']);
 Route::post('/cooking-medias/media-to-project', [MediasController::class, 'mediaToProject'])
     ->name('cooking-medias.media-to-project');
 
+Route::post('/cooking-medias/media-to-project', [MediasController::class, 'mediaToProject'])
+    ->name('cooking-medias.media-to-project');
+
+Route::get('/projects/{project}/medias', [MediasController::class, 'getMediaByProject'])->name('project.get-medias');
+
 Route::get('file-upload', [FileController::class, 'index'])->name('file.upload');
 Route::post('file-upload', [FileController::class, 'store'])->name('file.upload.store');
 Route::delete('file/{id}', [FileController::class, 'destroy'])->name('file.destroy');

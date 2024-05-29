@@ -15,6 +15,8 @@ export default function ProjectMediasSelection({projects, medias, setSelectedMed
         media_id: 0
     });
 
+    const [displayProjectSelection, setProjectSelection] = useState("")
+
     const submit = (e) => {
         e.preventDefault();
         try {
@@ -22,6 +24,13 @@ export default function ProjectMediasSelection({projects, medias, setSelectedMed
         } catch(error) {
             console.log(error)
         }
+    };
+
+    const handleProjectChange = (e) => {
+        const projectId = e.target.value;
+        setData('project_id', projectId);
+        setProjectSelection("")
+        setProjectSelection(prev => [...prev, projectId])
     };
 
     const handleMediaChange = (e) => {
@@ -33,6 +42,7 @@ export default function ProjectMediasSelection({projects, medias, setSelectedMed
 
     const reinitializeSelection = () => {
         setSelectedMedias([])
+        setProjectSelection("")
     }
 
     return(
@@ -46,20 +56,20 @@ export default function ProjectMediasSelection({projects, medias, setSelectedMed
                 </svg>
             </span>
             <form onSubmit={submit} className="flex flex-col gap-5">
-                <label htmlFor='project-choice'> Sélection du projet </label>
+                <label htmlFor='project-choice'> Sélection du projet {displayProjectSelection} </label>
                 <select
                     id='project-choice'
                     value={data.project_id}
                     className="block w-full border-gray-300
                     focus:border-indigo-300 focus:ring focus:ring-indigo-200
                     focus:ring-opacity-50 rounded-md shadow-sm"
-                    onChange={e => setData('project_id', e.target.value)}
+                    onChange={handleProjectChange}
                 >
                     {projects.map(project => {
                         return (<option key={project.id} value={project.id}>{project.project_title}</option>)
                     })}
                 </select>
-                <label htmlFor='project-choice'> Sélection du media </label>
+                <label htmlFor='media-choice'> Sélection du media </label>
                 <select
                     id='media-choice'
                     value={data.media_id}

@@ -5,6 +5,10 @@ namespace App\Http\Middleware;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
+use App\Models\Medias;
+use App\Models\Members;
+use App\Models\Projects;
+
 class HandleInertiaRequests extends Middleware
 {
     /**

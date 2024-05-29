@@ -24,6 +24,8 @@ class MediasController extends Controller
         'cloudinary' => 'cloudinary-url', 'local' => '/file-upload'
     ];
 
+    private array $projectMedias = [];
+
     /**
      * Display a listing of the resource.
      */
@@ -48,6 +50,10 @@ class MediasController extends Controller
             'projects' => Projects::all(),
             'authors' => Members::with('user:id,name')->get()
         ]);
+    }
+
+    private function setProjectMedias(array $projectMedias) {
+        $this->projectMedias = $projectMedias;
     }
 
     private function extractFileName(string $filePath) {
@@ -144,10 +150,13 @@ class MediasController extends Controller
         return redirect()->route('cooking-medias.index')->with('success', "$providerNameCap a été désactivé et ses medias supprimés sur els-cooking");
     }
 
-    public function mediaToProject(Request $request, int $media_id, int $project_id): RedirectResponse {
 
-        $project = Projects::find($project_id);
-        $media = Medias::find($media_id);
+    public function mediaToProject(Request $request): RedirectResponse {
+        $projectId = $request->project_id;
+        $mediaId = $request->media_id;
+
+        $project = Projects::find($projectId);
+        $media = Medias::find($mediaId);
 
         $project->medias()->attach($media->id);
         $projectName = $project->project_title;
@@ -162,6 +171,27 @@ class MediasController extends Controller
         $projectName = $project->project_title;
         return redirect()->route('cooking-medias.index')->with('success', "Les médias sélectionnés ont bien été rattaché à $projectName");
     }
+
+    public function getMediaByProject(int $projectId) {
+
+        $project = Projects::with('medias')->find($projectId);
+
+        if (!$project) {
+            abort(404); // Or return a custom response
+        }
+
+        // Transform the media data into a format suitable for the frontend
+        $mediaData = $project->medias->map(function ($media) {
+            return [
+                'id' => $media->id,
+                'name' => $media->media_name,
+                'slug' => "storage/uploads/" . $media->media_provider_id . "." . $media->media_provider_ext
+            ];
+        })->toArray();
+
+        return redirect()->route('cooking-projects.index');
+    }
+
 
     /**
      * Show the form for creating a new resource.

@@ -35,44 +35,31 @@ class FileController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // Get the file from the request
-        $file = $request->file('file');
-        // Get the original extension of the file
-        $extension = $file->getClientOriginalExtension();
-        $fileName = $request->title . '_' . time() . '.' . $extension;
+        if($request->hasFile('file')) if($request->file('file')->isValid()) {
+            $file = $request->file('file');
 
-        // Store the file using Laravel's Storage facade
-        $filePath = $file->storeAs('uploads', $fileName, 'public');
+            $path = $request->file->path();
+            dd($path);
+            $extension = $request->file->extension();
+            /** @var TYPE_NAME $fileName */
+            $fileName = $request->title . '_' . time() . '.' . $extension;
+            /** @var TYPE_NAME $filePath */
+            $filePath = $file->storeAs('uploads', $fileName, 'public');
+            Validator::make($request->all(), [
+                'title' => ['required'],
+                'file' => ['required', 'file'],
+            ])->validate();
 
-        Validator::make($request->all(), [
-            'title' => ['required'],
-            'file' => ['required', 'file'],
-        ])->validate();
+            File::create([
+                'title' => $request->title,
+                'name' => $filePath
+            ]);
 
-        File::create([
-            'title' => $request->title,
-            'name' => $filePath
-        ]);
-
-        return redirect()->route('file.upload')->with('success', "Le fichier $request->title a bien été stocké.");
-    }
-
-    /*
-    * Remove the specified resource from storage.
-    * @param  int  $id
-    * @return \Illuminate\Http\RedirectResponse
-    */
-    public function destroy(int $id): RedirectResponse
-    {
-        $file = File::findOrFail($id);
-
-        // Delete the file from storage
-        Storage::disk('public')->delete('uploads/' . $file->name);
-
-        // Delete the file record from the database
-        $file->delete();
-
-        return redirect()->route('file.upload')->with('success', 'Le fichier a bien été supprimé.');
+            return redirect()->route('file.upload')->with('success', "Le fichier $request->title a bien été stocké.");
+        } else {
+            return redirect()->route('file.upload')->with('error', "Le fichier n'a pas été uploadé.");
+        }
+        return redirect()->route('file.upload')->with('error', "Le fichier n'a pas été uploadé.");
     }
 
     /*

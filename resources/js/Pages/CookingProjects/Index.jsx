@@ -15,8 +15,10 @@ import ProjectsList from "@/Pages/CookingProjects/Partials/ProjectsList.jsx";
 dayjs.locale('fr-FR');
 dayjs.extend(relativeTime);
 
-export default function Index({ auth, projects, authors, flash }) {
+export default function Index({ projects, authors, flash, projectMedias, medias }) {
 
+    const { auth } = usePage().props;
+    console.log('projet medias', projectMedias);
     const toastId = useRef(null);
     const [editing, setEditing] = useState({on:false, object:{}});
 
@@ -202,7 +204,7 @@ export default function Index({ auth, projects, authors, flash }) {
                     : null}
                 </div>
                 <div className="p-4 sm:p-6 lg:p-8 flex flex-col flex-wrap grow gap-2">
-                    <ProjectsList auth={auth} projects={projects} authors={authors}  setEditing={setEditing} editing={editing}/>
+                    <ProjectsList medias={medias} projects={projects} projectMedias={projectMedias} authors={authors}  setEditing={setEditing} editing={editing}/>
                 </div>
             </section>
 
