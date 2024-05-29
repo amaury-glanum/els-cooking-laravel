@@ -75,6 +75,24 @@ class FileController extends Controller
         return redirect()->route('file.upload')->with('success', 'Le fichier a bien été supprimé.');
     }
 
+    /*
+    * Remove the specified resource from storage.
+    * @param  int  $id
+    * @return \Illuminate\Http\RedirectResponse
+    */
+    public function destroy(int $id): RedirectResponse
+    {
+        $file = File::findOrFail($id);
+
+        // Delete the file from storage
+        Storage::disk('public')->delete('uploads/' . $file->name);
+
+        // Delete the file record from the database
+        $file->delete();
+
+        return redirect()->route('file.upload')->with('success', 'Le fichier a bien été supprimé.');
+    }
+
     /**
      * Download the specified file.
      *

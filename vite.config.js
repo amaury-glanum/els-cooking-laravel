@@ -4,29 +4,25 @@ import react from '@vitejs/plugin-react';
 import dns from 'node:dns'
 
 dns.setDefaultResultOrder('verbatim')
+const port = 8443;
+const origin = `${process.env.DDEV_PRIMARY_URL}`;
 export default defineConfig({
-
     plugins: [
         laravel({
-            input: 'resources/js/app.jsx',
+            input: ['resources/js/app.jsx'],
             refresh: true,
         }),
         react(),
     ],
-    server: {
-        host: 'localhost',
-        port: 5173,
-        cors: true,
-        // hmr: {
-        //     clientPort: 3000, // Adjust this port if necessary
-        //     host: 'localhost',
-        //
-        // },
-        // hmr:{
-        //     host: process.env.DDEV_HOSTNAME,
-        //     protocol : 'wss'
-        // }
-    },
+    // server: {
+    //     // respond to all network requests
+    //     host: '0.0.0.0',
+    //     port: port,
+    //     strictPort: true,
+    //     // Defines the origin of the generated asset URLs during development,
+    //     // this will also be used for the public/hot file (Vite devserver URL)
+    //     origin: origin
+    // }
 });
 
 

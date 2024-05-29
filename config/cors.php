@@ -26,7 +26,7 @@ return [
         'http://[::1]:5173'
     ],
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => ['*'],
 
     'allowed_headers' => ['*'],
 
