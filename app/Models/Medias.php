@@ -22,7 +22,7 @@ class Medias extends Model
 
     public function projects():BelongsToMany
     {
-        return $this->belongsToMany(Projects::class, 'project_media');
+        return $this->belongsToMany(Projects::class, 'project_media')->withTimestamps();
     }
 
 }

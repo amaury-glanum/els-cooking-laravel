@@ -24,8 +24,6 @@ class Projects extends Model
         'project_method',
         'project_results',
         'project_single_url',
-        'project_img_url',
-        'project_img_name',
         'project_infos',
         'project_meta',
         'project_publish_status',
@@ -38,6 +36,6 @@ class Projects extends Model
 
     public function medias(): BelongsToMany
     {
-        return $this->belongsToMany(Medias::class, 'project_media');
+        return $this->belongsToMany(Medias::class, 'project_media')->withTimestamps();
     }
 }

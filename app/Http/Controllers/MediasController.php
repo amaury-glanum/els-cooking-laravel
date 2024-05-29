@@ -19,16 +19,6 @@ class MediasController extends Controller
      */
     public function index(): Response
     {
-        // if ressource not found
-        Configuration::instance(env('CLOUDINARY_URL'));
-        $publicId = 'elstogo/project-5_wvb3ne';
-        $admin = new AdminApi();
-        $resources = $admin->assets();
-
-        foreach ($resources['resources'] as $resource) {
-            $publicId = $resource['public_id'];
-        }
-
        return Inertia::render('Gallery/Index', [
             'medias' => Medias::all(),
             'members' => Members::all(),
@@ -84,10 +74,14 @@ class MediasController extends Controller
         return redirect()->route('cooking-medias.index')->with('success', 'Cloudinary a été désactivé et ses medias supprimés sur els-cooking');
     }
 
-    public function mediaToProject(Request $request, int $media_id, int $project_id): RedirectResponse {
-        dd($request);
-        $project = Projects::find($project_id);
-        $media = Medias::find($media_id);
+    public function mediaToProject(Request $request): RedirectResponse {
+        $projectId = $request->project_id;
+        $mediaId = $request->media_id;
+
+        $project = Projects::find($projectId);
+        $media = Medias::find($mediaId);
+
+//        dd($media, $project);
 
         $project->medias()->attach($media->id);
         $projectName = $project->project_title;
@@ -101,6 +95,31 @@ class MediasController extends Controller
         $project->medias()->attach($media->id);
         $projectName = $project->project_title;
         return redirect()->route('cooking-medias.index')->with('success', "Les médias sélectionnés ont bien été rattaché à $projectName");
+    }
+
+    public function getMediaByProject(int $projectId) {
+
+//        $project = Projects::find($projectId);
+//
+//        // Eager load the medias relationship
+//        $project->load('medias');
+
+        $project = Projects::with('medias')->find($projectId);
+
+        if (!$project) {
+            abort(404); // Or return a custom response
+        }
+
+        // Transform the media data into a format suitable for the frontend
+        $mediaData = $project->medias->map(function ($media) {
+            return [
+                'id' => $media->id,
+                'name' => $media->media_name, // Assuming your Media model has a title attribute
+                // Add other attributes as needed
+            ];
+        })->toArray();
+
+        return redirect()->route('project.medias', ['project-medias' => $mediaData]);
     }
 
     /**

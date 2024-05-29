@@ -35,24 +35,31 @@ class FileController extends Controller
     {
         // Get the file from the request
         $file = $request->file('file');
-        // Get the original extension of the file
-        $extension = $file->getClientOriginalExtension();
-        $fileName = $request->title . '_' . time() . '.' . $extension;
+        dd($request->file->path());
+        if($request->hasFile('file')) if($request->file('file')->isValid()) {
+            $file = $request->file('file');
 
-        // Store the file using Laravel's Storage facade
-        $filePath = $file->storeAs('uploads', $fileName, 'public');
+            $path = $request->file->path();
+            $extension = $request->file->extension();
+            /** @var TYPE_NAME $fileName */
+            $fileName = $request->title . '_' . time() . '.' . $extension;
+            /** @var TYPE_NAME $filePath */
+            $filePath = $file->storeAs('uploads', $fileName, 'public');
+            Validator::make($request->all(), [
+                'title' => ['required'],
+                'file' => ['required', 'file'],
+            ])->validate();
 
-        Validator::make($request->all(), [
-            'title' => ['required'],
-            'file' => ['required', 'file'],
-        ])->validate();
+            File::create([
+                'title' => $request->title,
+                'name' => $filePath
+            ]);
 
-        File::create([
-            'title' => $request->title,
-            'name' => $filePath
-        ]);
-
-        return redirect()->route('file.upload')->with('success', "Le fichier $request->title a bien été stocké.");
+            return redirect()->route('file.upload')->with('success', "Le fichier $request->title a bien été stocké.");
+        } else {
+            return redirect()->route('file.upload')->with('error', "Le fichier n'a pas été uploadé.");
+        }
+        return redirect()->route('file.upload')->with('error', "Le fichier n'a pas été uploadé.");
     }
 
     /*
