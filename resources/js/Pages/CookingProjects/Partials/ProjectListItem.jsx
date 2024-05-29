@@ -9,7 +9,7 @@ import PrimaryButton from "@/Components/PrimaryButton.jsx";
 export default function ProjectListItem({ project, authors, setEditing, editing, projectMedias, medias}){
 
     const { auth } = usePage().props
-
+    console.log(medias);
     // const [authorProjects, setAuthorProjects] = useState([]);
     const [authorProject, setAuthorProject] = useState([]);
 
@@ -24,6 +24,8 @@ export default function ProjectListItem({ project, authors, setEditing, editing,
             })
         }
     }, [authors, auth.user.id]);
+
+    const storage = "storage/uploads/"
 
     if (!authorProject) {
         return <li className={"text-center text-orange-700"}>Il n'y a pas encore de projets à montrer</li> // or a loading indicator
@@ -63,17 +65,15 @@ export default function ProjectListItem({ project, authors, setEditing, editing,
                     <span
                         className="text-xs text-gray-500">Créé par {projectCreator}, {createdFrom} ({project_publish_status === 'published' ? 'Publié' : 'Brouillon'}). </span>
             {projectMedias?.length > 0 ?
-                (<div>
+                (<div className={"flex flex-row flex-wrap gap-3"}>
                     {projectMedias.filter(projectMedia => projectMedia.projects_id === project.id).map(
                         projectMedia => {
                             return <div key={projectMedia.id}>{
                                 medias.filter(media => media.id === projectMedia.medias_id).map(media => {
                                     return (<>
-                                        <div>
-                                        {media.media_name}
-                                        </div>
-                                        <div>
-                                            {media.id}
+                                        <div className={"max-w-[50px]"}>
+                                           <img className="w-full object-contain aspect-square"
+                                                src={storage+media.media_provider_id+'.'+media.media_provider_ext} alt={''} />
                                         </div>
                                     </>)
                                 })
