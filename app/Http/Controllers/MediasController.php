@@ -10,16 +10,30 @@ use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
+use Illuminate\Support\Facades\Storage;
+
 use Cloudinary\Configuration\Configuration;
 use Cloudinary\Api\Admin\AdminApi;
 class MediasController extends Controller
 {
+    private array $cloudProviders = [
+        'cloudinary', 'local'
+    ];
+
+    private array $providersUrls = [
+        'cloudinary' => 'cloudinary-url', 'local' => '/file-upload'
+    ];
+
+    private array $projectMedias = [];
+
     /**
      * Display a listing of the resource.
      */
     public function index(): Response
     {
        return Inertia::render('Gallery/Index', [
+            'providers' => $this->cloudProviders,
+            'providersUrls' => $this->providersUrls,
             'medias' => Medias::all(),
             'members' => Members::all(),
             'projects' => Projects::all(),
@@ -27,17 +41,62 @@ class MediasController extends Controller
         ]);
     }
 
-    public function GetCloudinary(): RedirectResponse
+    private function setProjectMedias(array $projectMedias) {
+        $this->projectMedias = $projectMedias;
+    }
+
+    private function extractFileName(string $filePath) {
+        $file = basename($filePath);
+        // Further process if needed, for example, removing the extension explicitly
+        $fileNameParts = explode('.', $file);
+        $fileNameBase = implode('.', array_slice($fileNameParts, 0, -1));
+
+        // Update the file path with the modified name
+        return $fileNameBase;
+    }
+
+
+    public function GetProvider(string $providerName): RedirectResponse
     {
         Configuration::instance(env('CLOUDINARY_URL'));
         $admin = new AdminApi();
-        $resources = $admin->assets();
+
+        switch ($providerName) {
+            case 'cloudinary':
+                $resources = $admin->assets()['resources'];
+                break;
+            case 'local':
+                $files = Storage::disk('local')->allFiles('');
+                $resources = [];
+
+                foreach ($files as &$file) {
+                    // Extract the file ID/name without extension
+                    $fileId = $this->extractFileName($file); // Assuming this method returns the desired file ID/name
+                    $fileRootPath = dirname($file);
+
+                    // Get the MIME type of the file
+                    $mim = Storage::mimeType($file);
+                    if($mim && $fileRootPath === 'public/uploads') {
+                        $resources[] = ["public_id" => $fileId, "format" => basename($mim), "slug" => $file, "path" => $fileRootPath];
+                    }
+                        // Directly push the associative array into $resources
+
+
+                }
+                break;
+            default:
+                $resources = ['resources' => []];
+        }
+
         $exist = 0;
         $new = 0;
 
-        foreach ($resources['resources'] as $resource) {
+        foreach ($resources as $resource) {
+            $slug = $providerName === 'local' ? $resource['slug'] : "";
+            $folderPath = $providerName === 'local' ? $resource['path'] : "";
+            $description = $providerName === 'local' ? $resource['path'] : "";
             $existingMedia = Medias::where('media_provider_id', $resource['public_id'])
-                ->where('media_provider', 'cloudinary')
+                ->where('media_provider', $providerName)
                 ->first();
 
             if ($existingMedia) {
@@ -47,6 +106,8 @@ class MediasController extends Controller
                     'media_provider_id' => $resource['public_id'],
                     'media_extension' => $resource['format'],
                     'media_provider_ext' => $resource['format'],
+                    'media_slug' => $slug,
+                    'media_description' => $description,
                     'media_type' => 'image',
 
                 ]);
@@ -55,9 +116,11 @@ class MediasController extends Controller
                 // Create a new record
                 Medias::create([
                     'media_name' => $resource['public_id'],
-                    'media_provider' => 'cloudinary',
+                    'media_provider' => $providerName,
                     'media_provider_id' => $resource['public_id'],
                     'media_provider_ext' => $resource['format'],
+                    'media_slug' => $slug,
+                    'media_description' => $description,
                     'media_type' => 'image',
                 ]);
                 $new += 1;
@@ -65,13 +128,15 @@ class MediasController extends Controller
         }
         $new = strval($new);
         $exist = strval($exist);
-        return redirect(route('cooking-medias.index'))->with('success', "Cloudinary activé: $new media ajouté et $exist médias mis à jour" );
+        $providerNameCap = ucfirst($providerName);
+
+        return redirect(route('cooking-medias.index'))->with('success', "$providerNameCap activé: $new media ajouté et $exist médias mis à jour" );
     }
 
-    public function downCloudinary(): RedirectResponse {
-        Medias::where('media_provider', 'cloudinary')->delete();
-
-        return redirect()->route('cooking-medias.index')->with('success', 'Cloudinary a été désactivé et ses medias supprimés sur els-cooking');
+    public function downProvider(string $providerName): RedirectResponse {
+        Medias::where('media_provider', $providerName)->delete();
+        $providerNameCap = ucfirst($providerName);
+        return redirect()->route('cooking-medias.index')->with('success', "$providerNameCap a été désactivé et ses medias supprimés sur els-cooking");
     }
 
     public function mediaToProject(Request $request): RedirectResponse {
@@ -80,8 +145,6 @@ class MediasController extends Controller
 
         $project = Projects::find($projectId);
         $media = Medias::find($mediaId);
-
-//        dd($media, $project);
 
         $project->medias()->attach($media->id);
         $projectName = $project->project_title;
@@ -99,11 +162,6 @@ class MediasController extends Controller
 
     public function getMediaByProject(int $projectId) {
 
-//        $project = Projects::find($projectId);
-//
-//        // Eager load the medias relationship
-//        $project->load('medias');
-
         $project = Projects::with('medias')->find($projectId);
 
         if (!$project) {
@@ -114,12 +172,12 @@ class MediasController extends Controller
         $mediaData = $project->medias->map(function ($media) {
             return [
                 'id' => $media->id,
-                'name' => $media->media_name, // Assuming your Media model has a title attribute
-                // Add other attributes as needed
+                'name' => $media->media_name,
+                'slug' => "storage/uploads/" . $media->media_provider_id . "." . $media->media_provider_ext
             ];
         })->toArray();
 
-        return redirect()->route('project.medias', ['project-medias' => $mediaData]);
+        return redirect()->route('cooking-projects.index');
     }
 
     /**

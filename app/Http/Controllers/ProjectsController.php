@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProjectMedia;
 use App\Models\Projects;
-use App\Models\Members;
+use App\Models\Medias;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+
+
 
 class ProjectsController extends Controller
 {
@@ -18,7 +21,9 @@ class ProjectsController extends Controller
     public function index(): Response
     {
         return Inertia::render('CookingProjects/Index', [
+            'projectMedias' => ProjectMedia::all(),
             'projects' => Projects::all(),
+            'medias' => Medias::all(),
             'authors' => Projects::with('user:id,name')->get()]);
     }
 
@@ -128,6 +133,7 @@ class ProjectsController extends Controller
     public function update(Request $request, int $id): RedirectResponse
     {
         $projects = Projects::find($id);
+        $projectMedias = Medias::getProjectMedias();
 
         Gate::authorize('update', $projects);
         $validated = $request->validate([

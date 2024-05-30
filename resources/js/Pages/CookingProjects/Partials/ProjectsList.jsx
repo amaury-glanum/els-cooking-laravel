@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import ProjectListItem from "@/Pages/CookingProjects/Partials/ProjectListItem.jsx";
 
 
-export default function ProjectsList({auth, projects, authors, setEditing, editing}) {
+export default function ProjectsList({projects, authors, setEditing, editing, projectMedias, medias}) {
 
     return (
         <div className={`bg-gray-100 rounded p-5`}>
@@ -13,7 +13,13 @@ export default function ProjectsList({auth, projects, authors, setEditing, editi
                 <>
                     <ul className={`mt-5 flex flex-col gap-4`}>
                         {projects.map(project =>
-                            <ProjectListItem key={project.id} auth={auth} project={project} authors={authors} setEditing={setEditing} editing={editing}/>
+                            <ProjectListItem projectMedias={projectMedias}
+                                             key={project.id}
+                                             project={project}
+                                             medias={medias}
+                                             authors={authors}
+                                             setEditing={setEditing}
+                                             editing={editing}/>
                             )}
                     </ul>
                 </> :null}
