@@ -12,7 +12,9 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\UploadListDirectoryController;
 use Inertia\Inertia;
 
-Route::get('/', function () {
+use App\Http\Controllers\PublicController;
+
+Route::get('/backoffice', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -20,6 +22,11 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+Route::get('/', [PublicController::class, 'home'])->name('public.home');
+Route::get('/legal', [PublicController::class, 'legal'])->name('public.legal');
+Route::get('/confidentiality', [PublicController::class, 'confidentiality'])->name('public.confidentiality');
+Route::get('/credits', [PublicController::class, 'credits'])->name('public.credits');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

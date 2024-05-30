@@ -9,7 +9,11 @@ const origin = `${process.env.DDEV_PRIMARY_URL}`;
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/js/app.jsx'],
+            input: [
+                'resources/assets/scss/style.scss',
+                'resources/css/app.css',
+                'resources/js/app.jsx'],
+            ssr: 'resources/js/ssr.jsx',
             refresh: true,
         }),
         react(),
