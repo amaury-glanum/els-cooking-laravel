@@ -6,10 +6,12 @@
 
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
-        @vite(['resources/css/app.css', 'resources/assets/scss/style.scss'])
+
+        @vite(['resources/css/app.css', 'resources/theme/scss/style.scss', 'resources/theme/js/script.js', 'resources/theme/lib/jquery/jquery-3.7.1.min.js'])
         <!-- Livewire Styles -->
         @routes
         @livewireStyles
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -25,6 +27,7 @@
                 integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
                 crossorigin=""></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" type="text/javascript"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
 </head>
 
 <body class="font-sans antialiased">
@@ -33,8 +36,13 @@
         @yield('content')
     </div>
     @include('partials.footer')
+
 <!-- Livewire Scripts -->
     @livewireScripts
+
+    <script src="../../theme/lib/jquery/jquery-3.7.1.min.js"></script>
+    <script src="../../theme/build/script.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </body>
 
 </html>
