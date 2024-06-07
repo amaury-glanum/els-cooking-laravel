@@ -14,7 +14,7 @@ use App\Http\Controllers\GoogleDriveTestController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\UploadListDirectoryController;
 
-Route::get('/', function () {
+Route::get('/cooking', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),

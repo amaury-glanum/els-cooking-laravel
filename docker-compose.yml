@@ -13,10 +13,10 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MARIADB_DATABASE: b0djintrilfiraqshcjd-mysql.services.clever-cloud.com:3306
-      MARIADB_USER: nass
-      MARIADB_PASSWORD: password
-      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE:
+      MARIADB_USER:
+      MARIADB_PASSWORD:
+      MARIADB_ROOT_PASSWORD: 
     volumes:
       - ./data/db:/var/lib/mysql
 #      - ./sql/dump.sql:/docker-entrypoint-initdb.d/dump.sql
