@@ -1,5 +1,5 @@
 export const displayLeafletMap = () => {
-  const mapParent = document.querySelector('.page-home')
+  const mapParent = document.querySelector('.main__contact-section')
   if (mapParent) {
     const map = L.map('map').setView([6.26, 1.25], 10)
 
