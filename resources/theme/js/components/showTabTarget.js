@@ -20,21 +20,25 @@ export const showTabTarget = () => {
     });
   }
 
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => showTabContent(tab));
-  });
+  if(tabs.length > 0) {
+      tabs.forEach(tab => {
+          tab.addEventListener('click', () => showTabContent(tab));
+      });
 
-  document.addEventListener('keydown', event => {
-    const activeTab = document.querySelector('.project .js-tab-pill.active');
-    const index = Array.from(tabs).indexOf(activeTab);
+      document.addEventListener('keydown', event => {
+          const activeTab = document.querySelector('.project .js-tab-pill.active');
+          const index = Array.from(tabs).indexOf(activeTab);
 
-    if (event.key === 'ArrowRight') {
-      const nextTab = tabs[(index + 1) % tabs.length];
-      showTabContent(nextTab);
-    } else if (event.key === 'ArrowLeft') {
-      const prevTab = tabs[(index - 1 + tabs.length) % tabs.length];
-      showTabContent(prevTab);
-    }
-  });
+          if (event.key === 'ArrowRight') {
+              const nextTab = tabs[(index + 1) % tabs.length];
+              showTabContent(nextTab);
+          } else if (event.key === 'ArrowLeft') {
+              const prevTab = tabs[(index - 1 + tabs.length) % tabs.length];
+              showTabContent(prevTab);
+          }
+      });
+  }
+
+
 };
 
