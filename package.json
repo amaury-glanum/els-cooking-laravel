@@ -30,6 +30,7 @@
         "fs-extra": "^11.2.0",
         "g": "^2.0.1",
         "gsap": "^3.12.5",
+        "react-scripts": "^5.0.1",
         "react-toastify": "^10.0.5",
         "swiper": "^11.1.4",
         "tinymce": "^7.1.0",
