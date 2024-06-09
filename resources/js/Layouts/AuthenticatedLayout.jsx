@@ -51,8 +51,11 @@ export default function Authenticated({ user, header, flash, children }) {
                             </div>
                         </div>
 
-                        <div className="hidden sm:flex sm:items-center sm:ms-6">
-                            <div className="ms-3 relative">
+                        <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <NavLink href={route('public.home')} active={route().current('public.home')}>
+                                Aller au site
+                            </NavLink>
+                            <div className="ms-3 relative self-center">
                                 <Dropdown>
                                     <Dropdown.Trigger>
                                         <span className="inline-flex rounded-md">

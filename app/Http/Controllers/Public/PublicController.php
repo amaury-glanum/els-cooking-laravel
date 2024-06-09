@@ -9,22 +9,22 @@ class PublicController extends Controller
 {
     public function home()
     {
-        return view('public.home');
+        return view('public.home', ['pageId' => 'page-home']);
     }
 
     public function legal()
     {
-        return view('public.legal');
+        return view('public.legal', ['pageId' => 'page-legal']);
     }
 
     public function confidentiality()
     {
-        return view('public.confidentiality');
+        return view('public.confidentiality', ['pageId' => 'page-confidentiality']);
     }
 
     public function credits()
     {
-        return view('public.credits');
+        return view('public.credits', ['pageId' => 'page-credits']);
     }
 
 }

@@ -1,6 +1,12 @@
 @extends('layouts.public')
 
 @section('content')
-    <h1>Welcome to the Public Site</h1>
-    <p>This is the home page.</p>
+
+    <main id="homepage">
+        <livewire:sections.intro-section />
+        <livewire:sections.mission-section />
+        <livewire:sections.projects-section />
+        <livewire:sections.members-section />
+        <livewire:sections.contact-section />
+    </main>
 @endsection

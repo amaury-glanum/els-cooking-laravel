@@ -11,3 +11,5 @@ class MissionSection extends Component
         return view('livewire.sections.mission-section')->with('layout', 'public');
     }
 }
+
+

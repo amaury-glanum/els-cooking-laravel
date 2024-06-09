@@ -11,7 +11,7 @@
       width: 30px;
       min-width: 30px;
       height: 30px;
-      background: url('/assets/img/icones/els-map.svg') no-repeat center center/cover;
+      background: url($contact-map) no-repeat center center/cover;
     }
   }
 
@@ -27,7 +27,7 @@
       min-width: 30px;
       height: 30px;
       border-radius: 50%;
-      background: url('/assets/img/icones/els-phone.svg') no-repeat center center/cover;
+      background: url($contact-phone) no-repeat center center/cover;
     }
   }
 
@@ -41,7 +41,7 @@
       width: 30px;
       min-width: 30px;
       height: 30px;
-      background: url('/assets/img/icones/els-horaires.svg') no-repeat center center/cover;
+      background: url($contact-schedules) no-repeat center center/cover;
     }
   }
 
@@ -88,7 +88,7 @@
           width: 30px;
           min-width: 30px;
           height: 30px;
-          background: url('/assets/img/icones/els-contact.svg') no-repeat center center/cover;
+          background: url($contact-icon) no-repeat center center/cover;
         }
       }
 
