@@ -19,12 +19,12 @@
 	scrollbar-width: 0;
 }
 
-*::-webkit-scrollbar {
+html::-webkit-scrollbar {
 	background-color: transparent;
 	width: 12px;
 }
 
-*::-webkit-scrollbar-thumb {
+html::-webkit-scrollbar-thumb {
 	border-radius: 99px;
 	background-color: $primary;
 	border: 1px solid #fafafa;

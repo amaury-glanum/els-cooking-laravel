@@ -1,3 +1,4 @@
+
 import { jsxs, jsx, Fragment } from "react/jsx-runtime";
 import React, { forwardRef, useRef, useEffect, createContext, useState, useContext, Fragment as Fragment$1 } from "react";
 import { Link, useForm, Head, usePage, createInertiaApp } from "@inertiajs/react";
@@ -2923,24 +2924,7 @@ function Welcome({ auth, laravelVersion, phpVersion }) {
       ] }) })
     ] })
   ] });
-}
-const __vite_glob_0_23 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  default: Welcome
-}, Symbol.toStringTag, { value: "Module" }));
-const appName = "Laravel";
-createServer(
-  (page) => createInertiaApp({
-    page,
-    render: ReactDOMServer.renderToString,
-    title: (title) => `${title} - ${appName}`,
-    resolve: (name) => {
-      const pages = /* @__PURE__ */ Object.assign({ "./Pages/Auth/ConfirmPassword.jsx": __vite_glob_0_0, "./Pages/Auth/ForgotPassword.jsx": __vite_glob_0_1, "./Pages/Auth/Login.jsx": __vite_glob_0_2, "./Pages/Auth/Register.jsx": __vite_glob_0_3, "./Pages/Auth/ResetPassword.jsx": __vite_glob_0_4, "./Pages/Auth/VerifyEmail.jsx": __vite_glob_0_5, "./Pages/Chirps/Index.jsx": __vite_glob_0_6, "./Pages/CookingProjects/Index.jsx": __vite_glob_0_7, "./Pages/CookingProjects/Partials/ProjectListItem.jsx": __vite_glob_0_8, "./Pages/CookingProjects/Partials/ProjectsList.jsx": __vite_glob_0_9, "./Pages/CookingProjects/Partials/Wysiwyg.jsx": __vite_glob_0_10, "./Pages/CookingTeam/Index.jsx": __vite_glob_0_11, "./Pages/Dashboard.jsx": __vite_glob_0_12, "./Pages/FileUpload/Index.jsx": __vite_glob_0_13, "./Pages/Gallery/Index.jsx": __vite_glob_0_14, "./Pages/Gallery/Partials/GdriveList.jsx": __vite_glob_0_15, "./Pages/Gallery/Partials/ProjectMediasSelection.jsx": __vite_glob_0_16, "./Pages/Gallery/Partials/ProviderImg.jsx": __vite_glob_0_17, "./Pages/Gallery/Partials/UpdateMediaProvider.jsx": __vite_glob_0_18, "./Pages/Profile/Edit.jsx": __vite_glob_0_19, "./Pages/Profile/Partials/DeleteUserForm.jsx": __vite_glob_0_20, "./Pages/Profile/Partials/UpdatePasswordForm.jsx": __vite_glob_0_21, "./Pages/Profile/Partials/UpdateProfileInformationForm.jsx": __vite_glob_0_22, "./Pages/Welcome.jsx": __vite_glob_0_23 });
-      return pages[`./Pages/${name}.jsx`];
-    },
-    setup({ el, App, props }) {
-      const root = createRoot(el);
-      root.render(/* @__PURE__ */ jsx(App, { ...props }));
+
     }
   })
 );

@@ -7,6 +7,7 @@
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
 
+
         @vite(['resources/css/app.css', 'resources/theme/scss/style.scss', 'resources/theme/js/script.js', 'resources/theme/lib/jquery/jquery-3.7.1.min.js'])
         <!-- Livewire Styles -->
         @routes
@@ -28,21 +29,48 @@
                 crossorigin=""></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" type="text/javascript"></script>
         <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+
 </head>
 
-<body class="font-sans antialiased">
-    @include('partials.header')
-    <div class="content">
-        @yield('content')
-    </div>
-    @include('partials.footer')
+<body class="font-sans antialiased page-home">
+@include('partials.header')
+<div class="content">
+    @yield('content')
+</div>
+@include('partials.footer')
 
 <!-- Livewire Scripts -->
-    @livewireScripts
 
-    <script src="../../theme/lib/jquery/jquery-3.7.1.min.js"></script>
-    <script src="../../theme/build/script.umd.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+@livewireScripts
+
+<script src="{{ Vite::asset('resources/theme/lib/jquery/jquery-3.7.1.min.js') }}"></script>
+{{--<script src="{{ Vite::asset('public/build/assets/script.umd.js') }}"></script>--}}
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    const contactForm = document.querySelector('.contact-container__email')
+    if(contactForm) {
+        const emaildecode = (e) => {
+            let email = atob(e.dataset.email);
+            e.href = 'mailto:'+email;
+            e.innerHTML = email;
+        }
+        const emailtag = document.querySelector('.contact-email__link');
+        let observer = new IntersectionObserver((entries) => {
+            entries.map((entry) => {
+                if (entry.isIntersecting) {
+                    let script = document.createElement('script');
+                    script.onload = function () {
+                        emaildecode(entry.target)
+                    };
+                    script.src ="{{ Vite::asset('resources/theme/js/decode-email.js') }}";
+                    document.head.appendChild(script);
+                }
+            });
+        }).observe(emailtag);
+    }
+
+</script>
+
 </body>
 
 </html>
