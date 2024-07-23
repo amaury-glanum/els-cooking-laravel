@@ -1,13 +1,28 @@
-FROM richarvey/nginx-php-fpm:latest
+FROM webdevops/php-nginx:8.3-alpine
 
-COPY . .
+# Installation dans votre Image du minimum pour que Docker fonctionne
+RUN apk add oniguruma-dev libxml2-dev
+RUN docker-php-ext-install \
+        bcmath \
+        ctype \
+        fileinfo \
+        mbstring \
+        pdo_mysql \
+        xml
+
+# Installation dans votre image de Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Installation dans votre image de NodeJS
+RUN apk add nodejs npm
+
+ENV WEB_DOCUMENT_ROOT /app/public
 
 # Image config
-ENV SKIP_COMPOSER 1
-ENV WEBROOT /var/www/html/public
-ENV PHP_ERRORS_STDERR 1
-ENV RUN_SCRIPTS 1
-ENV REAL_IP_HEADER 1
+#ENV SKIP_COMPOSER 1
+#ENV PHP_ERRORS_STDERR 1
+#ENV RUN_SCRIPTS 1
+#ENV REAL_IP_HEADER 1
 
 # Laravel config
 ENV APP_ENV production
@@ -16,7 +31,32 @@ ENV LOG_CHANNEL stderr
 
 # Allow composer to run as root
 ENV COMPOSER_ALLOW_SUPERUSER 1
+WORKDIR /app
+COPY . .
 
-RUN chmod +x /var/www/html/start.sh
+# On copie le fichier .env.example pour le renommer en .env
+# Vous pouvez modifier le .env.example pour indiquer la configuration de votre site pour la production
+RUN cp -n .env.example .env
 
-CMD ["/start.sh"]
+# Installation et configuration de votre site pour la production
+# https://laravel.com/docs/10.x/deployment#optimizing-configuration-loading
+RUN composer install --no-interaction --optimize-autoloader --no-dev
+
+RUN php artisan key:generate
+
+RUN php artisan config:cache
+
+RUN php artisan route:cache
+
+RUN php artisan view:cache
+
+RUN php artisan migrate --force
+
+# Compilation des assets de Breeze (ou de votre site)
+RUN npm install
+RUN npm run build
+
+RUN chown -R application:application .
+
+
+
